@@ -58,7 +58,7 @@ class AccountkitResourceOwner extends FacebookResourceOwner
      */
     protected function doGetTokenRequest($url, array $parameters = array())
     {
-        return $this->httpRequest(http_build_url($url, ['query' => http_build_query($parameters, '', '&')]));
+        return $this->httpRequest(sprintf('%s?%s', $url, http_build_query($parameters, '', '&')));
     }
 
     /**
