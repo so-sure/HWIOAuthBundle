@@ -14,6 +14,7 @@ namespace HWI\Bundle\OAuthBundle\OAuth\ResourceOwner;
 use Buzz\Message\RequestInterface as HttpRequestInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * AccountkitResourceOwner.
@@ -49,6 +50,21 @@ class AccountkitResourceOwner extends FacebookResourceOwner
         $response = $this->getResponseContent($response);
 
         $this->validateResponseContent($response);
+
+        return $response;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUserInformation(array $accessToken, array $extraParameters = array())
+    {
+        $response = parent::getUserInformation($accessToken, $extraParameters);
+
+        if (!isset($response->getResponse()['application']) || !isset($response->getResponse()['application']['id']) ||
+            $response->getResponse()['application']['id'] != $this->options['client_id']) {
+            throw new AuthenticationException('Not a valid response for this application.');
+        }
 
         return $response;
     }
