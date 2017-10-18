@@ -12,6 +12,7 @@
         "oauth2",
         "security",
 
+        "accountkit",
         "amazon",
         "asana",
         "auth0",
